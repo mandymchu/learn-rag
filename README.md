@@ -20,9 +20,7 @@ Local documents / code files
   -> generate grounded answer
 ```
 
-**RAG** — Retrieval-Augmented Generation is a technique that enhances 
-LLM responses by retrieving relevant documents from a knowledge base 
-and using them as context to generate grounded answers.
+**RAG** — Retrieval-Augmented Generation 
 ---
 
 ## Project Structure

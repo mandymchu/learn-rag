@@ -34,19 +34,18 @@ def load_documents(directory: str) -> list[dict]:
 
 def chunk_text(text: str, source: str, chunk_size: int = 500, overlap: int = 50) -> list[dict]:
     # Splits a full document text into overlapping chunks.
-    # Each chunk advances by (chunk_size - overlap) characters,
-    # so adjacent chunks share `overlap` characters at their boundary.
+    # Each chunk advances by (chunk_size - overlap) characters, so adjacent chunks share `overlap` characters at their boundary.
     # Example: chunk_size=500, overlap=50 → chunk 0 covers [0:500], chunk 1 covers [450:950], etc.
-    # returns [{"chunk_index": 0, "text": "...", "source": "..."}, ...]
+    # returns [{"chunk_index": 0, "text": "chunk text...", "source": "..."}, ...]
     chunks = []
     start = 0
     chunk_index = 0
     while start < len(text):
         end = start + chunk_size
         chunk = text[start:end]
-        chunks.append({"text": chunk, "source": source, "chunk_index": chunk_index})
-        start += chunk_size - overlap
+        chunks.append({"chunk_index": chunk_index,"text": chunk, "source": source})
         chunk_index += 1
+        start += chunk_size - overlap
     return chunks
 
 def load_and_chunk(directory: str, chunk_size: int = 500, overlap: int = 50) -> list[dict]:

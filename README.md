@@ -81,6 +81,8 @@ learn-rag/
 
 ---
 
+> **Phases 3–5 relationship:** Phase 3 builds the store (how to hold and search chunks). Phase 4 builds the chunker (how to produce chunks from real files). Phase 5 wires them together: load files → chunk → embed → store. Each component is built and tested in isolation first, then composed in Phase 5.
+
 ### Phase 3 — Vector Store
 **File:** `vector_store.py`
 

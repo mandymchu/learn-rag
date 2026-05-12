@@ -118,12 +118,11 @@ Wire together: load → chunk → embed → save
 
 **Key concept:** Ingestion — the offline process of preparing documents for retrieval
 
-✅ `python scripts/ingest.py examples/sample_docs` outputs:
+✅ `python scripts/ingest.py` outputs:
 ```
-Loaded 3 files
-Created 12 chunks
-Embedded 12 chunks
-Saved to storage/vector_store.json
+Loaded and chunked: 12 chunks from 3 files
+Embedded and stored 12 chunks
+Saved to scripts/test_results/vector_store.json
 ```
 
 ---

@@ -130,6 +130,8 @@ Saved to scripts/test_results/vector_store.json
 ### Phase 6 — Full RAG Pipeline + Sources
 **File:** `rag_pipeline.py`, `scripts/ask.py`
 
+> **Phases 5–6 relationship:** Phase 5 is the offline prep — documents are chunked, embedded, and saved to disk. Phase 6 is the online query — it loads the saved store, embeds the question, retrieves relevant chunks, injects them into a prompt, and calls the LLM. The two phases are intentionally separate: ingestion runs once, querying runs many times.
+
 - Embed the question → search vector store → build prompt with retrieved context → call LLM
 - Return answer + sources (file, chunk index, similarity score) from day one
 

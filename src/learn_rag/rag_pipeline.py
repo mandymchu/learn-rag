@@ -9,15 +9,16 @@
 
 import os
 from openai import OpenAI
-from vector_store import VectorStore
-from config import OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_CHAT_MODEL
+from learn_rag.vector_store import VectorStore
+from learn_rag.config import OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_CHAT_MODEL
 
 
 def rag_ask(question, top_k=5):
     # 1. Load the vector store from disk
-    directory = os.path.join(os.path.dirname(__file__), "test_results")
+    PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    vector_store_path = os.path.join(PROJECT_ROOT, "scripts", "test_results", "vector_store.json")
     vector_store = VectorStore()
-    vector_store.load(os.path.join(directory, "vector_store.json"))
+    vector_store.load(vector_store_path)
 
     # 2. Embed the query and search for top-k relevant chunks
     relevant_chunks = vector_store.search(question, top_k=top_k)
@@ -54,7 +55,7 @@ def rag_ask(question, top_k=5):
     answer = response.choices[0].message.content
     sources = []
     for chunk in relevant_chunks:
-        source_info = f"{os.path.basename(chunk['metadata']['source'])} (chunk {chunk['metadata']['chunk_index']} similarity: {chunk['similarity']:.2f})"
+        source_info = f"{os.path.basename(chunk['metadata']['source'])} (chunk {chunk['metadata']['chunk_index']}, similarity: {chunk['similarity']:.2f})"
         sources.append(source_info)
     return answer, sources
 

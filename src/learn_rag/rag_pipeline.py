@@ -13,12 +13,15 @@ from learn_rag.vector_store import VectorStore
 from learn_rag.config import OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_CHAT_MODEL
 
 
-def rag_ask(question, top_k=5):
+def rag_ask(question, top_k=5, loaded_vector_store=None):
     # 1. Load the vector store from disk
-    PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    vector_store_path = os.path.join(PROJECT_ROOT, "scripts", "test_results", "vector_store.json")
-    vector_store = VectorStore()
-    vector_store.load(vector_store_path)
+    if not loaded_vector_store:
+        PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        vector_store_path = os.path.join(PROJECT_ROOT, "scripts", "test_results", "vector_store.json")
+        vector_store = VectorStore()
+        vector_store.load(vector_store_path)
+    else:
+        vector_store = loaded_vector_store
 
     # 2. Embed the query and search for top-k relevant chunks
     relevant_chunks = vector_store.search(question, top_k=top_k)

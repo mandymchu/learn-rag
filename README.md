@@ -153,6 +153,18 @@ Saved to scripts/test_results/vector_store.json
 **Key concept:** Code RAG  — retrieve relevant code snippets so the model can explain a codebase
 
 ✅ `python scripts/ask.py "Where is the vector store implemented?"`
+```
+Question: Where is cosine similarity implemented?
+
+Answer: Cosine similarity is implemented in the function `cosine_similarity` defined in the provided context.
+
+Sources:
+- embeddings.py (chunk 16, similarity: 0.53)
+- vector_store.py (chunk 14, similarity: 0.46)
+- vector_store.py (chunk 10, similarity: 0.29)
+- vector_store.py (chunk 13, similarity: 0.20)
+- rag_pipeline.py (chunk 23, similarity: 0.17)
+```
 
 ---
 

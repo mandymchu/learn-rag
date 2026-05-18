@@ -6,7 +6,8 @@ from learn_rag.chunker import load_and_chunk
 
 if __name__ == "__main__":
     # 1. Load and chunk the documents
-    directory = os.path.join(os.path.dirname(__file__), "test_data", "sample_docs")
+    # directory = os.path.join(os.path.dirname(__file__), "test_data", "sample_docs")
+    directory = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "test_data", "sample_docs")
     chunks = load_and_chunk(directory)
     # [{"chunk_index": 0, "text": "chunk text...", "source": "..."}, ...]
     print(f"Loaded and chunked: {len(chunks)} chunks from {len(set(chunk['source'] for chunk in chunks))} files")

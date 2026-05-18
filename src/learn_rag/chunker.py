@@ -29,7 +29,7 @@ def load_documents(directory: str) -> list[dict]:
             file_path = os.path.join(root, filename)
             text = _read_file(file_path, ext)
             if text:
-                documents.append({"text": text, "source": file_path})
+                documents.append({"text": text, "source": file_path, "file_extension": ext})
     return documents
 
 def chunk_text(text: str, source: str, chunk_size: int = 500, overlap: int = 50) -> list[dict]:
@@ -43,15 +43,42 @@ def chunk_text(text: str, source: str, chunk_size: int = 500, overlap: int = 50)
     while start < len(text):
         end = start + chunk_size
         chunk = text[start:end]
-        chunks.append({"chunk_index": chunk_index,"text": chunk, "source": source})
+        chunks.append({"chunk_index": chunk_index,"text": chunk, "source": source, "file_type":"text"})
         chunk_index += 1
         start += chunk_size - overlap
+    return chunks
+
+
+def chunk_code(text: str, source: str) -> list[dict]:
+    # A simple code-specific chunking strategy that tries to split on function or class definitions
+    chunks = []
+    chunk_index = 0
+    lines = text.splitlines()
+    reverse_lines = lines[::-1]
+    current_chunk = []
+    for line in reverse_lines:
+        current_chunk.append(line)
+        if line.strip().startswith(('def ', 'class ')):
+            chunks.append({"chunk_index": chunk_index, "text": "\n".join(current_chunk[::-1]), "source": source, "file_type":"code"})
+            chunk_index += 1
+            current_chunk = []
+    # Add any remaining lines as the last chunk
+    if current_chunk:
+        chunks.append({"chunk_index": chunk_index, "text": "\n".join(current_chunk[::-1]), "source": source, "file_type":"code"})
+    #Note: If we traverse lines in reverse to detect def/class boundaries, chunks are built from the bottom of the file up 
+    # so chunk_index: 0 ends up pointing to the last function defined, not the first. Misleading when debugging.
+    chunks = chunks[::-1]  # reverse back to original order so chunk_index 0 points to the first function/class in the file
+    for i, chunk in enumerate(chunks):
+        chunk["chunk_index"] = i
     return chunks
 
 def load_and_chunk(directory: str, chunk_size: int = 500, overlap: int = 50) -> list[dict]:
     all_chunks = []
     documents = load_documents(directory)
     for doc in documents:
-        chunks = chunk_text(doc["text"], doc["source"], chunk_size, overlap)
+        if doc["file_extension"] == ".py":
+            chunks = chunk_code(doc["text"], doc["source"])
+        else:
+            chunks = chunk_text(doc["text"], doc["source"], chunk_size, overlap)
         all_chunks.extend(chunks)
     return all_chunks
